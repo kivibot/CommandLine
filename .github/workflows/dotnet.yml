@@ -2,22 +2,25 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+env:
+  VERSION_MAJOR: 0
+  VERSION_MINOR: 1
+  VERSION_PATCH: ${{ github.run_number }}
+  VERSION: ${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.${{ env.VERSION_PATCH }}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Pack
+        run: dotnet pack Kivibot.CommandLine.sln -p:Version=$VERSION --artifacts-path dist
+      - name: Publish
+        run: dotnet nuget push "dist/package/release/Kivibot.CommandLine.$VERSION.nupkg" --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key "${{ secrets.NUGET_APIKEY }}"
