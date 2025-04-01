@@ -8,12 +8,12 @@ env:
   VERSION_MAJOR: 0
   VERSION_MINOR: 1
   VERSION_PATCH: ${{ github.run_number }}
-  VERSION: ${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.${{ env.VERSION_PATCH }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      VERSION: ${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.${{ env.VERSION_PATCH }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
