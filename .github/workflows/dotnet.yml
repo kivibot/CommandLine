@@ -8,7 +8,7 @@ env:
   VERSION: 0.1.${{ github.run_number }}
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,3 +20,15 @@ jobs:
         run: dotnet pack Kivibot.CommandLine.sln -p:Version=$VERSION --artifacts-path dist
       - name: Publish
         run: dotnet nuget push "dist/package/release/Kivibot.CommandLine.$VERSION.nupkg" --source https://api.nuget.org/v3/index.json --skip-duplicate --api-key "${{ secrets.NUGET_APIKEY }}"
+  tag:
+    needs: ["build-and-publish"]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create tag
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git tag -a "$VERSION" -m "Version $VERSION"
+          git push origin "$VERSION"
