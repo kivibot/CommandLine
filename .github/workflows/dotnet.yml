@@ -10,8 +10,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.${{ env.VERSION_PATCH }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
