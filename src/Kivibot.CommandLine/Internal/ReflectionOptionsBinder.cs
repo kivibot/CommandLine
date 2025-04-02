@@ -114,7 +114,11 @@ internal class ReflectionOptionsBinder
             optionAttribute.Description
         )!;
 
-        if (!prop.IsRequired)
+        if (prop.IsRequired)
+        {
+            option.IsRequired = true;
+        }
+        else
         {
             option.SetDefaultValueFactory(prop.GetDefaultValue);
         }
