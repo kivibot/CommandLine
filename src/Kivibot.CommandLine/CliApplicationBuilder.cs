@@ -37,7 +37,7 @@ public class CliApplicationBuilder : IHostApplicationBuilder
 
     public IServiceCollection Services => _inner.Services;
 
-    public async Task BuildAndExecuteAsync(string[] args)
+    public async Task<int> BuildAndExecuteAsync(string[] args)
     {
         using var host = _inner.Build();
 
@@ -56,6 +56,6 @@ public class CliApplicationBuilder : IHostApplicationBuilder
             }))
             .Build();
 
-        await parser.InvokeAsync(args);
+        return await parser.InvokeAsync(args);
     }
 }
